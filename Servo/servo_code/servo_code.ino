@@ -3,6 +3,10 @@ Servo servo1; // diferentiates between the two servos
 Servo servo2; // diferentiates between the two servos
 
 #define DELAY 2000   // 2 second delay
+#define STEP_SIZE 1    // Change this value to make the movement step bigger or smaller
+#define INITIAL_DELAY 15  // Initial delay in milliseconds between each servo movement step
+#define FINAL_DELAY 15    // Final delay in milliseconds for a slower ending movement
+#define ACCELERATION_STEPS 5 // Number of steps to incrementally increase/decrease delay (simulate acceleration/deceleration)
 
 
 void setup() {
@@ -15,10 +19,7 @@ void setup() {
   servo2.write(90); // sets initial position facing forward
 }
 
-void loop() {
-  
-  // delay(DELAY); //  Hold the microcontroller for 2 seconds
-    
+void loop() {    
   if (Serial.available() > 1) { //checks if there is any data available to be read from the serial buffer, if it is greater than one byte
     int angle1, angle2; // intergers named angle1 and angle2 that are then assigned values in the serial monitor
     angle1 = Serial.parseInt(); // Read the first angle value from serial monitor, serial.parseInt looks for the next valid integer in the incoming serial
@@ -27,20 +28,29 @@ void loop() {
     angle1 = constrain(angle1, 0, 180); // Limit angles to between 0 and 180, if a value greater than 180 is entered than the servo is moved to the 180 position
     angle2 = constrain(angle2, 50, 180); // Limit angles to between 0 and 180, if a value greater than 180 is entered than the servo is moved to the 180 position
     
-    servo1.write(angle1); // Move servo1 to specified angle
-    servo2.write(angle2); // Move servo2 to specified angle
-    
+    moveServo(servo1, servo1.read(), angle1);
+    moveServo(servo2, servo2.read(), angle2);
+
     Serial.print("Servo 1 angle: "); // Prints "Servo 1 angle: " to serial monitor
     Serial.println(servo1.read()); // Print current angle of servo 1 to serial monitor
     Serial.print("Servo 2 angle: "); // Print "Servo 2 angle: " to serial monitor
     Serial.println(servo2.read()); // Print current angle of servo 2 to serial monitor
-  }
-/*  
-  else
-    {   
-    servo1.write(90); // upright position for head
-    servo2.write(90); // faces forward
-    delay(DELAY); //  Hold the microcontroller for 2 seconds
+  } 
+}
+
+void moveServo(Servo servo, int fromAngle, int toAngle) {
+  int step = (toAngle > fromAngle) ? STEP_SIZE : -STEP_SIZE;
+  int delayTime = INITIAL_DELAY;
+  int delayStep = (INITIAL_DELAY - FINAL_DELAY) / ACCELERATION_STEPS;
+
+  for (int angle = fromAngle; (step > 0) ? angle <= toAngle : angle >= toAngle; angle += step) {
+    servo.write(angle);
+    delay(delayTime);
+    if (angle - fromAngle < ACCELERATION_STEPS * STEP_SIZE || toAngle - angle < ACCELERATION_STEPS * STEP_SIZE) {
+      delayTime -= delayStep; // Decrease delay to speed up
+    } else {
+      delayTime = FINAL_DELAY; // Keep constant speed
     }
-  */  
+    delayTime = max(delayTime, FINAL_DELAY); // Ensure delay never goes below FINAL_DELAY
+  }
 }
