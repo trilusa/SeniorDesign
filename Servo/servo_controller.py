@@ -1,27 +1,25 @@
 import serial
-import keyboard
+import time
 
-# Replace 'COM3' with the port where your Arduino is connected
-ser = serial.Serial('COM3', 9600, timeout=1)
-# Define a list of angle pairs
-angle_pairs = [(0, 0), (90, 90), (180, 180), (45, 45), (135, 135)]
+# Configure the serial port. You might need to change the port name.
+ser = serial.Serial('/dev/ttyACM0', 9600)  # Change '/dev/ttyACM0' to your Arduino's port
+ser.flush()  # Flush the serial buffer
 
-def send_angles(angle_pair):
-    """Send a pair of angles to the Arduino."""
-    # Convert the tuple to a string and encode it to bytes
-    data = f"{angle_pair[0]},{angle_pair[1]}\n".encode()
-    ser.write(data)
-    print(f"Sent angles: {angle_pair}")
-
-# Main loop
-print("Press any key to send the next set of angles from the list...")
-index = 0
-while True:
-    try:
-        if keyboard.read_key():  # Wait for a key press
-            send_angles(angle_pairs[index])
-            index = (index + 1) % len(angle_pairs)  # Move to next pair or loop back
-    except KeyboardInterrupt:
-        break  # Exit the loop if Ctrl+C is pressed
-
-ser.close()  # Close the serial connection when done
+def send_angles(angles):
+    angles_str = ','.join(str(angle) for angle in angles)
+    print(angles_str)
+    ser.write((angles_str + '\n').encode())
+    ser.flush()
+i=0
+angle_pairs = [(85, 85), (80,80),(75, 75), (70,70),(60,60)]  # Example angle pairs
+try:
+    while True:
+        input("Press Enter to send angle pairs...")
+        # Define your angle pairs here
+        send_angles(angle_pairs[i])
+        i=i+1
+        time.sleep(1)  # Optional delay to avoid flooding the Arduino
+except KeyboardInterrupt:
+    print("Program terminated by user.")
+finally:
+    ser.close()  # Close the serial connection when done
