@@ -4,6 +4,7 @@ import wave
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 2  # Stereo
+
 RATE = 48000  # Sample rate
 RECORD_SECONDS = 5
 OUTPUT_FILENAME = "stereo_recording.wav"

@@ -2,10 +2,9 @@
 Servo servo1; // diferentiates between the two servos
 Servo servo2; // diferentiates between the two servos
 
-#define DELAY 2000   // 2 second delay
 #define STEP_SIZE 1    // Change this value to make the movement step bigger or smaller
-#define INITIAL_DELAY 15  // Initial delay in milliseconds between each servo movement step
-#define FINAL_DELAY 15    // Final delay in milliseconds for a slower ending movement
+#define INITIAL_DELAY 20  // Initial delay in milliseconds between each servo movement step
+#define FINAL_DELAY 20    // Final delay in milliseconds for a slower ending movement
 #define ACCELERATION_STEPS 5 // Number of steps to incrementally increase/decrease delay (simulate acceleration/deceleration)
 
 
@@ -14,9 +13,8 @@ void setup() {
   
   servo1.attach(9); // Attach servo to pin 9, bottom servo that turns left and right
   servo2.attach(10); // Attach another servo to pin 10, top servo that tilts back and forward
-
-  servo1.write(90); // sets initial position in upright position for head
-  servo2.write(90); // sets initial position facing forward
+  moveServo(servo1, servo1.read(), 90);
+  moveServo(servo2, servo2.read(), 90);
 }
 
 void loop() {    

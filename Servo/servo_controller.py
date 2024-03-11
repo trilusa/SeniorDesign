@@ -10,22 +10,13 @@ def send_angles(angles):
     print(angles_str)
     ser.write((angles_str + '\n').encode())
     ser.flush()
-i=0
-# angle_pairs = [(85, 85), (80,80),(75, 75), (70,70),(60,60)]  # Example angle pairs
-angle_pairs = [(azimuth, elevation) for azimuth in range(0, 181, 15) for elevation in range(60, 121, 15)]
+
+angle_pairs = [(azimuth, 0) for azimuth in range(-90, 91, 15)]# for elevation in range(-0, 6, 5)]
+angle_pairs = [((azimuth + 90) % 360, (elevation + 90) % 360) for azimuth, elevation in angle_pairs]
+
 print(angle_pairs)
+
 for angle_pair in angle_pairs:
-    input("Press Enter to send angle pairs...")
+    # input("Press Enter to send angle pairs...")
     send_angles(angle_pair)
-    time.sleep(5) 
-# try:
-#     while True:
-#         #input("Press Enter to send angle pairs...")
-#         # Define your angle pairs here
-#         send_angles(angle_pairs[i])
-#         i=i+1
-#         time.sleep(0.05)  # Optional delay to avoid flooding the Arduino
-# except KeyboardInterrupt:
-#     print("Program terminated by user.")
-# finally:
-#     ser.close()  # Close the serial connection when done
+    time.sleep(1)
