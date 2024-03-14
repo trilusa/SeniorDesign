@@ -11,7 +11,7 @@ def send_angles(angles):
     ser.write((angles_str + '\n').encode())
     ser.flush()
 
-angle_pairs = [(azimuth, 0) for azimuth in range(-90, 91, 15)]# for elevation in range(-0, 6, 5)]
+angle_pairs = [(azimuth, -30) for azimuth in range(-90, 91, 15)]# for elevation in range(-0, 6, 5)]
 angle_pairs = [((azimuth + 90) % 360, (elevation + 90) % 360) for azimuth, elevation in angle_pairs]
 
 print(angle_pairs)
@@ -20,4 +20,4 @@ time.sleep(5)
 for angle_pair in angle_pairs:
     # input("Press Enter to send angle pairs...")
     send_angles(angle_pair)
-    time.sleep(1)
+    time.sleep(4)
