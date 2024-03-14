@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 
-fs=48e3
+fs=48000
 T=1 #seconds
 f0=200
 f1=20000
@@ -15,7 +15,7 @@ chirp = np.cos(theta)
 chirp_int16 = np.int16(chirp * 32767)  # 32767 is the max value for int16
 
 # Write the signal to a WAV file
-output_file = 'chirp_signal.wav'
+output_file = f"chirp_f0-{f0}-hz_f1-{f1}-hz_duration-{T}-s_fs-{fs}-hz.wav"
 wavfile.write(output_file, int(fs), chirp_int16)
 output_file
 
