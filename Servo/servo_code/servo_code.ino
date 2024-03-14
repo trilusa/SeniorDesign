@@ -3,8 +3,8 @@ Servo servo1; // diferentiates between the two servos
 Servo servo2; // diferentiates between the two servos
 
 #define STEP_SIZE 1    // Change this value to make the movement step bigger or smaller
-#define INITIAL_DELAY 20  // Initial delay in milliseconds between each servo movement step
-#define FINAL_DELAY 20    // Final delay in milliseconds for a slower ending movement
+#define INITIAL_DELAY 15  // Initial delay in milliseconds between each servo movement step
+#define FINAL_DELAY 15    // Final delay in milliseconds for a slower ending movement
 #define ACCELERATION_STEPS 5 // Number of steps to incrementally increase/decrease delay (simulate acceleration/deceleration)
 
 
