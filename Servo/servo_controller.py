@@ -15,7 +15,8 @@ angle_pairs = [(azimuth, 0) for azimuth in range(-90, 91, 15)]# for elevation in
 angle_pairs = [((azimuth + 90) % 360, (elevation + 90) % 360) for azimuth, elevation in angle_pairs]
 
 print(angle_pairs)
-
+send_angles(angle_pairs[0])
+time.sleep(5)
 for angle_pair in angle_pairs:
     # input("Press Enter to send angle pairs...")
     send_angles(angle_pair)
