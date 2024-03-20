@@ -289,7 +289,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 324.0]
+    coordinate: [280, 316.0]
     rotation: 0
     state: enabled
 - name: band_pass_filter_0_0
@@ -314,7 +314,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [304, 508.0]
+    coordinate: [280, 484.0]
     rotation: 0
     state: enabled
 - name: blocks_moving_average_xx_0
@@ -531,7 +531,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 388.0]
+    coordinate: [520, 356.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_0
