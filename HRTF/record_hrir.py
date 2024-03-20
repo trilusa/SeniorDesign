@@ -5,7 +5,7 @@ import threading
 # Parameters
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
-CHANNELS = 1.5  # Stereo
+CHANNELS = 2  # Stereo
 RATE = 48000  # Sample rate
 RECORD_SECONDS = 2
 OUTPUT_FILENAME = "stereo_recording.wav"
