@@ -7,15 +7,15 @@ from matplotlib.animation import FuncAnimation
 N = 2**10
 fs = 96000
 ts = 1 / fs
-f0 = 1000.0
+f0 = 6000.0
 t = np.linspace(0.0, N * ts, N, endpoint=False)
 phases = np.linspace(0, 2 * np.pi, 100)  # Sweep through 0 to 2*pi
 # Function to update the plots for each frame
 def update(phi):
-    xt = np.sin(f0 * 2.0 * np.pi * t + phi)
+    xt = np.sin(f0 * 2.0 * np.pi * t + phi)*np.blackman_harris(N)
     xf = np.fft.fft(xt)
     f = np.fft.fftfreq(N, ts)
-    # f=np.linspace(-fs/2,fs/2,N,endpoint=False)
+    f=np.linspace(0,fs,N,endpoint=False)
 
     angle = np.angle(xf)
     mag=np.abs(xf)/N
@@ -32,7 +32,7 @@ def update(phi):
     
     # Magnitude Spectrum
     plt.subplot(3, 2, 3)
-    plt.plot(f, mag)
+    plt.plot(f,mag)
     plt.title('Magnitude Spectrum')
     plt.xlabel('Frequency (Hz)')
     plt.ylabel('Magnitude')
@@ -40,7 +40,7 @@ def update(phi):
     
     # Phase Spectrum
     plt.subplot(3, 2, 5)
-    plt.plot(f, angle)
+    plt.plot(f,angle)
     plt.title('Phase Spectrum')
     plt.xlabel('Frequency (Hz)')
     plt.ylabel('Phase (Radians)')
@@ -48,10 +48,12 @@ def update(phi):
 
     # Complex plane representation
     plt.subplot(1, 2, 2)
-    plt.scatter(xf.real, xf.imag,s=25)
+    plt.scatter(xf.real/N, xf.imag/N,s=25)
     plt.xlabel('Real')
     plt.ylabel('Imaginary')
-    plt.axis('equal')  # Make sure the plot is square
+    plt.axis('square')  # Make sure the plot is square
+    plt.xlim((-1,1))
+    plt.ylim((-1,1))
     plt.title('Complex Plane Representation')
     plt.grid()
 
