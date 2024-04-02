@@ -342,7 +342,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [392, 472.0]
+    coordinate: [376, 288.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_arg_0
