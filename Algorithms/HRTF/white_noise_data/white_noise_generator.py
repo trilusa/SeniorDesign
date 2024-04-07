@@ -4,7 +4,7 @@ import struct
 
 # Constants
 sample_rate = 96000  # 96 kHz
-duration = 2**21 / sample_rate  # Calculate duration to get exactly 2^19 samples
+duration = 2**20 / sample_rate  # Calculate duration to get exactly 2^19 samples
 num_samples = int(duration * sample_rate)
 
 # Generate white noise using a Gaussian distribution
@@ -14,7 +14,7 @@ white_noise = np.random.normal(0, 1, num_samples)
 normalized_noise = np.int16(white_noise / np.max(np.abs(white_noise)) * 32767)
 
 # Set up parameters for the WAV file
-file_name = "white_noise.wav"
+file_name = "/home/adrian/Documents/SeniorDesign/BinauralHearingProcessing/SeniorDesign/Algorithms/HRTF/white_noise_data/white_noise.wav"
 num_channels = 1
 sampwidth = 2  # 2 bytes per sample (16 bits per sample)
 
