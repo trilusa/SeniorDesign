@@ -29,10 +29,10 @@ void loop() {
     moveServo(servo1, servo1.read(), angle1);
     moveServo(servo2, servo2.read(), angle2);
 
-    Serial.print("Servo 1 angle: "); // Prints "Servo 1 angle: " to serial monitor
-    Serial.println(servo1.read()); // Print current angle of servo 1 to serial monitor
-    Serial.print("Servo 2 angle: "); // Print "Servo 2 angle: " to serial monitor
-    Serial.println(servo2.read()); // Print current angle of servo 2 to serial monitor
+    // Serial.print("Servo 1 angle: "); // Prints "Servo 1 angle: " to serial monitor
+    // Serial.println(servo1.read()); // Print current angle of servo 1 to serial monitor
+    // Serial.print("Servo 2 angle: "); // Print "Servo 2 angle: " to serial monitor
+    // Serial.println(servo2.read()); // Print current angle of servo 2 to serial monitor
   } 
 }
 

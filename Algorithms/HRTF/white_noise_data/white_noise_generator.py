@@ -1,10 +1,10 @@
 import numpy as np
 import wave
-import struct
 
 # Constants
 sample_rate = 96000  # 96 kHz
-duration = 2**20 / sample_rate  # Calculate duration to get exactly 2^19 samples
+duration = 14
+# duration = 2**20 / sample_rate  # Calculate duration to get exactly 2^19 samples
 num_samples = int(duration * sample_rate)
 
 # Generate white noise using a Gaussian distribution
@@ -23,4 +23,4 @@ with wave.open(file_name, 'w') as wav_file:
     wav_file.setparams((num_channels, sampwidth, sample_rate, num_samples, 'NONE', 'not compressed'))
     wav_file.writeframes(normalized_noise.tobytes())
 
-print(f"Generated white noise WAV file with {num_samples} samples at {sample_rate} Hz, optimized for HRTF measurements.")
+print(f"Generated white noise WAV file with {num_samples} samples at {sample_rate} Hz ({duration}s)")

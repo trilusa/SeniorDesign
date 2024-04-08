@@ -11,21 +11,28 @@ def send_angles(angles):
     ser.write((angles_str + '\n').encode())
     ser.flush()
 
-angle_pairs = [(azimuth, elevation) for azimuth in range(-90, 91, 45) for elevation in range(-30, 90, 5)]
-print(angle_pairs)
-angle_pairs = [((azimuth + 90) % 360, (elevation + 90) % 360) for azimuth, elevation in angle_pairs]
+# angles = [(90, el) for el in range(50, 181)]
+az_el_grid = [[(az, el) for az in range(0, 181)] for el in range(50, 181)]
+az_el_90 = [t for sublist in az_el_grid for t in sublist if t[0] == 90]
+# angle_pairs = [(azimuth, elevation) for azimuth in range(-90, 91, 45) for elevation in range(-50, 90, 1)]
+# angle_pairs = [(0, elevation) for elevation in range(-50, 90, 1)]
+#center = (90,90)
+print(az_el_90)
+# angle_pairs = [((azimuth + 90) % 360, (elevation + 90) % 360) for azimuth, elevation in angle_pairs]
 
-print(angle_pairs)
-send_angles(angle_pairs[0])
+# print(angle_pairs)
+send_angles((90,90))
 time.sleep(5)
 
 
 while True:
-    for angle_pair in angle_pairs:
+    for angle_pair in [(90,50),(90,180)]:
         # input("Press Enter to send angle pairs...")
         send_angles(angle_pair)
-        time.sleep(2)
-    for angle_pair in angle_pairs:
-        input("Press Enter to send angle pairs...")
-        send_angles(angle_pair)
-        # time.sleep(4)
+        time.sleep(2.8)
+    az_el_90.reverse()
+        
+    # for angle_pair in reversed(az_el_90):
+    #     input("Press Enter to send angle pairs...")
+    #     send_angles(angle_pair)
+    #     # time.sleep(4)
