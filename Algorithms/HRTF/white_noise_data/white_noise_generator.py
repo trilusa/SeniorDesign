@@ -3,7 +3,7 @@ import wave
 
 # Constants
 sample_rate = 96000  # 96 kHz
-duration = 14
+duration = 4.5
 # duration = 2**20 / sample_rate  # Calculate duration to get exactly 2^19 samples
 num_samples = int(duration * sample_rate)
 

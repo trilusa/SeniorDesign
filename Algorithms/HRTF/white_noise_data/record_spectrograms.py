@@ -30,7 +30,7 @@ def send_angle_thread(ser, angle):
     ser.write((angles_str + '\n').encode())
     ser.flush()
     print("angles_sent")
-    time.sleep(5)
+    time.sleep(2)
     
 def record_thread(record_duration, sample_rate, output_buf):
     recording = sd.rec(int(record_duration * sample_rate), samplerate=sample_rate, channels=2, dtype='int16')
@@ -49,16 +49,16 @@ print("Script Began")
 # Connect to arduino
 ser = serial.Serial('/dev/ttyACM2', 9600)  # Change '/dev/ttyACM0' to your Arduino's port
 ser.flush()
-time.sleep(5)
+time.sleep(1)
 
 # Parameters
 file_name = "/home/adrian/Documents/SeniorDesign/BinauralHearingProcessing/SeniorDesign/Algorithms/HRTF/white_noise_data/white_noise.wav"
 wav_sample_rate, wav_signal = wavfile.read(file_name)
 
 sample_rate = 96000
-dead_time = 2 #amount of time to cuttof the front 
-dead_samples = dead_time * sample_rate
-record_duration = 10+dead_time
+dead_time = 1.5 #amount of time to cuttof the front 
+dead_samples = int(dead_time * sample_rate)
+record_duration = 2.5+dead_time
 N = record_duration * sample_rate
 
 print(f"N samples={N} (2**{np.log2(N)}) samples\n duration={record_duration}\n sample_rate={sample_rate}")
@@ -98,14 +98,24 @@ print(f"L len;{L.shape}, R len: {R.shape}")
 f, t, Sxx_left = compute_spectrogram(L,sample_rate)
 f, t, Sxx_right = compute_spectrogram(R,sample_rate)
 
+HRTF_left = np.mean(Sxx_left,axis=1)
+HRTF_right= np.mean(Sxx_right,axis=1)
+
+
+print(f"Sxx shape={Sxx_left.shape}\tHRTF shape={HRTF_left.shape}")
 # np.savez('combined_spectrograms.npz', f=f, t=t,
 #          Sxx_left=Sxx_left, Sxx_right=Sxx_right, Sxx_noise=Sxx_noise)
 
 plt.figure(figsize=(10, 6))
-r=2
-c=1
+r=3
+c=2
 plt.subplot(r,c,1)
 plot_spectrogram(t,f,Sxx_left, f'Spectrogram of Right Channel, (az={angle[0]},el={angle[1]}',xlabel=False,ylabel=True)
-plt.subplot(r,c,2)
+plt.subplot(r,c,3)
 plot_spectrogram(t,f,Sxx_right, f'Spectrogram of Left Channel, (az={angle[0]},el={angle[1]}', xlabel=True,ylabel=True)
+
+plt.subplot(r,c,5)
+plt.plot(f,HRTF_left, label='L')
+plt.plot(f,HRTF_right, label="R")
+plt.legend()
 plt.show()
