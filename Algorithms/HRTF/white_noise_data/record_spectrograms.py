@@ -9,7 +9,10 @@ import threading
 import pickle
 # from Audio.audio_player import ThreadedAudioPlayer
 
-
+pickle_name = 'hrtf_data7.pkl'
+# angles = [(90, el) for el in range(50, 150+1, 1)]
+# angles = [[(az, el) for az in range(0, 181, 10)] for el in range(50, 151, 50)]
+angles= [(az, el) for az in range(10, 191, 5) for el in range(50, 151, 1)]
 
 def compute_spectrogram(data, fs):
     frequencies, times, Sxx = spectrogram(data, fs=fs, window='hamming',
@@ -68,7 +71,7 @@ def record_thread(record_duration, sample_rate, output_buf, ok_to_send_angle_eve
     print("record_thread: done")
 
 def compute_and_save_HRTF(recording, sample_rate, angle):
-    with open('hrtf_data.pkl', 'ab') as file:
+    with open(pickle_name, 'ab') as file:
         dead_time = 1.5 #amount of time to cuttof the front 
         dead_samples = int(dead_time * sample_rate)
         L = recording[dead_samples:,0]
@@ -90,8 +93,9 @@ def play_thread(data,sample_rate):
     # print("Wave file finished")
 
 print("Script Began")
+t0=time.time()
 # Connect to arduino
-ser = serial.Serial('/dev/ttyACM2', 9600)  # Change '/dev/ttyACM0' to your Arduino's port
+ser = serial.Serial('/dev/ttyACM0', 9600)  # Change '/dev/ttyACM0' to your Arduino's port
 ser.flush()
 time.sleep(1)
 
@@ -109,7 +113,6 @@ print(f"N samples={N} (2**{np.log2(N)}) samples\n duration={record_duration}\n s
 
 
 #shared variables
-angles = [(90, el) for el in range(50, 181)]
 shared_recording = []
 ok_to_send_angle_event = threading.Event()
 ok_to_record_event = threading.Event()
@@ -128,6 +131,8 @@ player = threading.Thread(target=play_thread,args=(wav_signal, wav_sample_rate))
 
 # player.start()
 arduino.start()
+
+time.sleep(10)
 record.start()
 # player.start()
 
@@ -135,7 +140,8 @@ record.start()
 arduino.join()
 record.join()
 # player.join()
-
+t1=time.time()
+print(f"Runtime: {(t1-t0)/60} min")
 recording = shared_recording#[0] if shared_recording else None
 
 if recording is None:
@@ -145,30 +151,31 @@ r=3
 c=2
 print(type(shared_recording), len(shared_recording))#, recording[:,0].shape) 
 #cuttoff the first ~1.36 second (2^17 samples), this is a work around
-for i in range(len(shared_recording)):
-    recording = shared_recording[i]
-    L = recording[dead_samples:,0]
-    R = recording[dead_samples:,1]
+# for i in range(len(shared_recording)):
+i=0
+recording = shared_recording[i]
+L = recording[dead_samples:,0]
+R = recording[dead_samples:,1]
 
-    print(f"L len;{L.shape}, R len: {R.shape}")
+print(f"L len;{L.shape}, R len: {R.shape}")
 
-    f, t, Sxx_left = compute_spectrogram(L,sample_rate)
-    f, t, Sxx_right = compute_spectrogram(R,sample_rate)
+f, t, Sxx_left = compute_spectrogram(L,sample_rate)
+f, t, Sxx_right = compute_spectrogram(R,sample_rate)
 
-    HRTF_left = np.mean(Sxx_left,axis=1)
-    HRTF_right= np.mean(Sxx_right,axis=1)
+HRTF_left = np.mean(Sxx_left,axis=1)
+HRTF_right= np.mean(Sxx_right,axis=1)
 
 
-    print(f"Sxx shape={Sxx_left.shape}\tHRTF shape={HRTF_left.shape}")
-    
-    plt.subplot(r,c,i+1)
-    plot_spectrogram(t,f,Sxx_left, f'Spectrogram of Right Channel, (az={angles[i][0]},el={angles[i][1]}',xlabel=False,ylabel=True)
-    plt.subplot(r,c,i+3)
-    plot_spectrogram(t,f,Sxx_right, f'Spectrogram of Left Channel', xlabel=True,ylabel=True)
+print(f"Sxx shape={Sxx_left.shape}\tHRTF shape={HRTF_left.shape}")
 
-    plt.subplot(r,c,i+5)
-    plt.plot(f,HRTF_left, label='L')
-    plt.plot(f,HRTF_right, label="R")
-    plt.xlim(0,15000)
-    plt.legend()
+plt.subplot(r,c,i+1)
+plot_spectrogram(t,f,Sxx_left, f'Spectrogram of Right Channel, (az={angles[i][0]},el={angles[i][1]}',xlabel=False,ylabel=True)
+plt.subplot(r,c,i+3)
+plot_spectrogram(t,f,Sxx_right, f'Spectrogram of Left Channel', xlabel=True,ylabel=True)
+
+plt.subplot(r,c,i+5)
+plt.plot(f,HRTF_left, label='L')
+plt.plot(f,HRTF_right, label="R")
+plt.xlim(0,15000)
+plt.legend()
 plt.show()

@@ -4,7 +4,7 @@ import numpy as np
 
 # Load data from pickle file
 data = []
-with open('hrtf_data.pkl', 'rb') as file:
+with open('hrtf_data6.pkl', 'rb') as file:
     while True:
         try:
             data.append(pickle.load(file))
