@@ -4,7 +4,7 @@ import numpy as np
 
 # Load data from pickle file
 data = []
-with open('hrtf_data6.pkl', 'rb') as file:
+with open('hrtf_data10.pkl', 'rb') as file:
     while True:
         try:
             data.append(pickle.load(file))
@@ -26,7 +26,7 @@ hrtf_right = np.array([item[1] for item in data_sorted])
 sample_rate = 96000  # Hz
 nyquist_freq = sample_rate / 2
 n_fft = hrtf_left.shape[1]  # Total number of FFT points
-
+print(n_fft)
 # Calculate the index for the Nyquist frequency (half of the sample rate)
 nyquist_index = n_fft // 2
 

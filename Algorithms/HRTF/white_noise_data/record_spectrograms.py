@@ -9,14 +9,13 @@ import threading
 import pickle
 # from Audio.audio_player import ThreadedAudioPlayer
 
-pickle_name = 'hrtf_data7.pkl'
+pickle_name = 'hrtf_data11.pkl'
 # angles = [(90, el) for el in range(50, 150+1, 1)]
 # angles = [[(az, el) for az in range(0, 181, 10)] for el in range(50, 151, 50)]
 angles= [(az, el) for az in range(10, 191, 5) for el in range(50, 151, 1)]
-
 def compute_spectrogram(data, fs):
     frequencies, times, Sxx = spectrogram(data, fs=fs, window='hamming',
-                                          nperseg=1024, noverlap=512, nfft=1024, scaling='density')
+                                          nperseg=4096, noverlap=2048, nfft=4096, scaling='density')
     return frequencies, times, Sxx
 
 def plot_spectrogram(t,f,Sxx,title="",xlabel=False,ylabel=False):
@@ -43,7 +42,7 @@ def send_angle_thread(ser, angles, ok_to_send_angle_event, ok_to_record_event):
         print(f"send_angle_thread:: sending angles ({angles_str})")
         ser.write((angles_str + '\n').encode())
         ser.flush()
-        time.sleep(2)
+        time.sleep(1) #wait to move and settle
         print("angles_sent")
         # if angle is not angles[-1]: # is it not the last angle?
         ok_to_record_event.set()
@@ -106,11 +105,10 @@ wav_sample_rate, wav_signal = wavfile.read(file_name)
 sample_rate = 96000
 dead_time = 1.5 #amount of time to cuttof the front 
 dead_samples = int(dead_time * sample_rate)
-record_duration = 2.5+dead_time
+record_duration = 5+dead_time
 N = record_duration * sample_rate
 
 print(f"N samples={N} (2**{np.log2(N)}) samples\n duration={record_duration}\n sample_rate={sample_rate}")
-
 
 #shared variables
 shared_recording = []
