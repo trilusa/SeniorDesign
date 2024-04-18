@@ -22,9 +22,9 @@ void loop() {
     int angle1, angle2; // intergers named angle1 and angle2 that are then assigned values in the serial monitor
     angle1 = Serial.parseInt(); // Read the first angle value from serial monitor, serial.parseInt looks for the next valid integer in the incoming serial
     angle2 = Serial.parseInt(); // Read the second angle value from serial monitor, serial.parseInt looks for the next valid integer in the incoming serial
-    
-    angle1 = constrain(angle1, 0, 180); // Limit angles to between 0 and 180, if a value greater than 180 is entered than the servo is moved to the 180 position
-    angle2 = constrain(angle2, 50, 180); // Limit angles to between 0 and 180, if a value greater than 180 is entered than the servo is moved to the 180 position
+    // 90 -> 95
+    angle1 = constrain(angle1, 10, 180); // Limit angles to between 0 and 180, if a value greater than 180 is entered than the servo is moved to the 180 position
+    angle2 = constrain(angle2, 15, 150); // Limit angles to between 0 and 180, if a value greater than 180 is entered than the servo is moved to the 180 position
     
     moveServo(servo1, servo1.read(), angle1);
     moveServo(servo2, servo2.read(), angle2);
