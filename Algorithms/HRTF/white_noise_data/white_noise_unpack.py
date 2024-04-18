@@ -7,7 +7,7 @@ import time
 t0=time.time()
 print(t0)
 data = []
-fn= "raw_whitenoise_data_az15deg_el2deg"
+fn= "raw_whitenoise_data_az15deg_el10deg"
 fn_in=fn+".pkl"
 with open(fn_in, 'rb') as file:
     while True:
@@ -27,7 +27,7 @@ print(len(L))
 # R_norm = np.array(R)/(2**15)
 # print(len(L_norm))
 
-az = [line[2][0] for line in  data]
+az = [line[2][0] for line in  data] #TODO adjust by -10 to account for offset
 el = [line[2][1] for line in  data]
 sample_rate = [line[3] for line in data]
 # sound_type = ["WHITE_NOISE" for _ in data]
