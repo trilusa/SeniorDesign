@@ -24,7 +24,6 @@ az = [line[2][0] for line in  data]
 el = [line[2][1] for line in  data]
 sample_rate = [line[3] for line in data]
 sound_type = ["WHITE_NOISE" for _ in data]
-print(sample_rate[1])
 
 df = pd.DataFrame({
     "L": L,  # Wrap arrays in a list to store as array objects in a single dataframe row
@@ -38,18 +37,4 @@ df = pd.DataFrame({
 })
 
 print(df)
-df.to_pickle('white_noise_df.pkl')
-# def compute_spectrogram(data, fs):
-#     frequencies, times, Sxx = spectrogram(data, fs=fs, window='hamming',
-#                                           nperseg=4096, noverlap=2048, nfft=4096, scaling='density')
-#     return frequencies, times, Sxx
-
-# def plot_spectrogram(t,f,Sxx,title="",xlabel=False,ylabel=False):
-#     plt.pcolormesh(t, f, 10 * np.log10(Sxx), shading='gouraud')
-#     if(ylabel):
-#         plt.ylabel('Frequency [Hz]')
-#     if(xlabel):
-#         plt.xlabel('Time [sec]')
-#     plt.title(title)
-#     plt.colorbar(label='Intensity [dB]')
-#     plt.ylim(0, 22000)  # Limit frequency to human hearing frequency
+df.to_pickle('white_noise_test_df.pkl')
