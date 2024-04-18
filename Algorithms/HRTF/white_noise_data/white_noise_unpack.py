@@ -23,21 +23,22 @@ R_norm = [r/32767 for r in R]
 az = [line[2][0] for line in  data]
 el = [line[2][1] for line in  data]
 sample_rate = [line[3] for line in data]
-
+sound_type = ["WHITE_NOISE" for _ in data]
 print(sample_rate[1])
 
 df = pd.DataFrame({
     "L": L,  # Wrap arrays in a list to store as array objects in a single dataframe row
     "R": R,
-    "L_norm": L_norm,
-    "R_norm": R_norm,
+    # "L_norm": L_norm,
+    # "R_norm": R_norm,
     "az": az,
     "el": el,
+    "sound_type": sound_type,
     "sample_rate": sample_rate
 })
 
 print(df)
-
+df.to_pickle('white_noise_df.pkl')
 # def compute_spectrogram(data, fs):
 #     frequencies, times, Sxx = spectrogram(data, fs=fs, window='hamming',
 #                                           nperseg=4096, noverlap=2048, nfft=4096, scaling='density')
