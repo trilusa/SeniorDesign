@@ -1,5 +1,5 @@
 {
     "board": "arduino:avr:uno",
-    "sketch": "venv/lib64/python3.10/site-packages/fontTools/pens/momentsPen.c",
+    "sketch": "Servo/servo_code/servo_code.ino",
     "port": "/dev/ttyACM0"
 }

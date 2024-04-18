@@ -24,7 +24,7 @@ void loop() {
     angle2 = Serial.parseInt(); // Read the second angle value from serial monitor, serial.parseInt looks for the next valid integer in the incoming serial
     
     angle1 = constrain(angle1, 0, 180); // Limit angles to between 0 and 180, if a value greater than 180 is entered than the servo is moved to the 180 position
-    angle2 = constrain(angle2, 50, 180); // Limit angles to between 0 and 180, if a value greater than 180 is entered than the servo is moved to the 180 position
+    angle2 = constrain(angle2, 0, 180); // Limit angles to between 0 and 180, if a value greater than 180 is entered than the servo is moved to the 180 position
     
     moveServo(servo1, servo1.read(), angle1);
     moveServo(servo2, servo2.read(), angle2);
