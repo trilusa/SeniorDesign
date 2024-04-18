@@ -17,9 +17,9 @@ dead_time = 1.5 #amount of time to cuttof the front
 dead_samples = int(dead_time * sample_rate)
 record_duration = 5+dead_time
 N = int(record_duration * sample_rate)
-pickle_name = 'raw_whitenoise_data_test.pkl'
-angles= [(az, el) for az in range(10, 191, 5) for el in range(50, 151, 1)]
-
+pickle_name = 'raw_whitenoise_data_az15deg_el10deg.pkl'
+angles= [(az, el) for az in range(10, 191, 15) for el in range(50, 151, 10)]
+print(len(angles))
 def send_angle_thread(ser, angles, ok_to_send_angle_event, ok_to_record_event):
     print("send_angle_thread: started")
     ser.write(('90,90\n').encode()) #set to 90.90
