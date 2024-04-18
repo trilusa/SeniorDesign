@@ -4,13 +4,13 @@ import numpy as np
 
 # Load data from pickle file
 data = []
-with open('hrtf_data10.pkl', 'rb') as file:
+with open('hrtf_data11.pkl', 'rb') as file:
     while True:
         try:
             data.append(pickle.load(file))
         except EOFError:
             break
-
+print(len(data))
 # Sort data by angles
 data_sorted = sorted(data, key=lambda x: x[2])
 angles = np.array([item[2] for item in data_sorted])
