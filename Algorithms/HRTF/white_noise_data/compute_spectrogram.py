@@ -1,8 +1,6 @@
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-import sounddevice as sd
-from scipy.io import wavfile
 from scipy.signal import spectrogram
 from concurrent.futures import ProcessPoolExecutor
 import pandas as pd
@@ -23,11 +21,9 @@ def apply_HRTF_parallel(x,fs):
         HRTF = list(executor.map(compute_HRTF,x,[fs]*len(x)))
     return HRTF
 
-
-
 print("Script Started")
 t0=time.time()
-fn='raw_whitenoise_data_az15deg_el10deg_df'
+fn='/Users/adrian/Documents/Senior Design/SeniorDesign/Algorithms/data/raw_primes_data_az15deg_el2deg_df'
 df = pd.read_pickle(fn+'.pkl')
 df.info(); print(df)
 print(f"\n{fn} loaded into df in {time.time()-t0} sec\n")
@@ -39,13 +35,27 @@ filtered_df.info()
 sample_rate = 96000
 L=filtered_df['L']
 R=filtered_df['R']
+
+
+#comment if already normalized
+L_lst =[l/(2**15) for l in L]
+R_lst =[r/(2**15) for r in R]
+
+
 t0=time.time()
 print(f"Computation started at {t0}")
-HRTF_L_lst = apply_HRTF_parallel(L, sample_rate)
-HRTF_R_lst = apply_HRTF_parallel(R, sample_rate)
+# HRTF_L_lst = apply_HRTF_parallel(L, sample_rate)
+# HRTF_R_lst = apply_HRTF_parallel(R, sample_rate)
+HRTF_L_lst = []
+HRTF_R_lst = []
+for l in L_lst:
+    HRTF_L_lst.append(compute_HRTF(l,sample_rate))
+for r in R_lst:
+    HRTF_R_lst.append(compute_HRTF(r,sample_rate))
+
 elapsed = time.time()-t0
 print(f"Computation Finished, executed in {elapsed} sec ({elapsed/len(HRTF_L_lst)}) per HRTF)")
-
+print(HRTF_L_lst)
 filtered_df['HRTF_L'] = HRTF_L_lst
 filtered_df['HRTF_R'] = HRTF_R_lst
 filtered_df.to_pickle(fn+'_az90deg'+ '.pkl')
