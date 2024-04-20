@@ -28,11 +28,12 @@ files_and_types = {
     # 'raw_birds_data_az15deg_el2deg_start10_df': 'BIRDS',
     'raw_fire_data_az15deg_el2deg_df': 'FIRE',
     'raw_music_data_az15deg_el2deg_df': 'MUSIC',
-    # 'raw_music_data_az15deg_el2deg_start5_df': 'MUSIC',
-    # 'raw_music_data_az15deg_el2deg_start10_df': 'MUSIC',
+    'raw_music_data_az15deg_el2deg_start5_df': 'MUSIC',
+    'raw_music_data_az15deg_el2deg_start10_df': 'MUSIC',
     'raw_chinesebible_data_az15deg_el2deg_df': 'CHINESE',
     'raw_chinesebible_data_az15deg_el2deg_start5_df': 'CHINESE',
-    'raw_chinesebible_data_az15deg_el2deg_start10_df': 'CHINESE'
+    'raw_chinesebible_data_az15deg_el2deg_start10_df': 'CHINESE',
+    'raw_muon_data_az5deg_el5deg_df.pkl': 'MUSIC'
 }
 
 base_path = "" #run with relative paths from Algorithms/data directory
@@ -45,13 +46,21 @@ for file_base, sound_type in files_and_types.items():
     df['sound_type'] = sound_type
     df = pd.melt(df, id_vars=['az', 'el', 'sound_type', 'sample_rate'], 
                  value_vars=['L', 'R'], var_name='channel', value_name='signal')
+    #decimate to 48000
+    mask = df['sample_rate'] == 96000  # Create a mask for rows to be decimated
+    df.loc[mask, 'signal'] = df.loc[mask, 'signal'].apply(lambda x: np.array(x)[::2])
+    df.loc[mask, 'sample_rate'] = df.loc[mask, 'sample_rate']//2
+
     print_df(df)
     all_dfs.append(df)
 
 df = pd.concat(all_dfs, ignore_index=True)
 
+
+
 print(f"\n\n########### All ##############\n\n")
 # df = pd.concat(df.apply(split_audio, axis=1).tolist(), ignore_index=True)
+print(df['signal'].iloc[0].shape)
 print(df); df.info()
-df.to_pickle("raw_recordings.pkl")
+# df.to_pickle("raw_recordings.pkl")
 print("DONE")

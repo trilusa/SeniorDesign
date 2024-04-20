@@ -56,6 +56,7 @@ df.drop('signal', axis=1, inplace=True)
 X_R=df.query('channel=="R"')['spectrum']
 H_L=df_hrtf.query('channel=="L"')['spectrum']
 print(X_R*H_L)
+
 # for el in df_hrtf['el']:
     # scores = np.zeros(max(df_el['seq_id'].values)+1)
         # print(f'el={el},seq_id={i}')
