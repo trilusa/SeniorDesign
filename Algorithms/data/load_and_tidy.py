@@ -35,13 +35,7 @@ df_whitenoise['L'] = [(l*(2**15)).astype(np.int16) for l in df_whitenoise['L']] 
 df_whitenoise['R'] = [(r*(2**15)).astype(np.int16) for r in df_whitenoise['R']]
 df_whitenoise['sound_type'] = 'WHITE_NOISE' #add sound type
 df_whitenoise = pd.melt(df_whitenoise, id_vars=['az', 'el', 'sound_type', 'sample_rate'], value_vars=['L', 'R'], var_name='channel', value_name='signal')
-# print(df_whitenoise.head()); df_whitenoise.info()
 print_df(df_whitenoise)
-
-#compute HRTFs and store in own df
-HRTF = df_whitenoise.apply()
-
-
 
 #primes load df
 df_primes = pd.read_pickle("/Users/adrian/Documents/Senior Design/SeniorDesign/Algorithms/data/raw_primes_data_az15deg_el2deg_df.pkl")
