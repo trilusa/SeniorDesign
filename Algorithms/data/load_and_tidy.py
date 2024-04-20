@@ -12,19 +12,19 @@ def compute_spectrum(x,fs):
     X = np.mean(Sxx, axis=1)
     return X
 
-def split_audio(row,T=1.0):
-    # Calculate the number of samples per 1-second audio
-    fs = row['sample_rate']
-    N=int(T*fs)
-    new_rows = []
-    num_segs = len(row['signal'])/N
-    for i in range(int(num_segs)):
-        start_idx = i * N
-        end_idx = start_idx + N
-        new_row = row.copy()
-        new_row['signal'] = row['signal'][start_idx:end_idx]
-        new_rows.append(new_row)
-    return pd.DataFrame(new_rows)
+# def split_audio(row,T=1.0):
+#     # Calculate the number of samples per 1-second audio
+#     fs = row['sample_rate']
+#     N=int(T*fs)
+#     new_rows = []
+#     num_segs = len(row['signal'])/N
+#     for i in range(int(num_segs)):
+#         start_idx = i * N
+#         end_idx = start_idx + N
+#         new_row = row.copy()
+#         new_row['signal'] = row['signal'][start_idx:end_idx]
+#         new_rows.append(new_row)
+#     return pd.DataFrame(new_rows)
 
 def print_df(d):
     print(f"\n********** {d['sound_type'].iloc[0]} ***********\n"); print(d); d.info(); print("\n")
@@ -69,6 +69,6 @@ dfs = [df_whitenoise, df_primes, df_birds, df_fire, df_music]
 df = pd.concat(dfs, ignore_index=True)
 
 print(f"\n\n########### All ##############\n\n")
-df = pd.concat(df.apply(split_audio, axis=1).tolist(), ignore_index=True)
+# df = pd.concat(df.apply(split_audio, axis=1).tolist(), ignore_index=True)
 print(df); df.info()
 df.to_pickle("raw_recordings.pkl")

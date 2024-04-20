@@ -13,13 +13,13 @@ def compute_spectrum(x,fs=96000):
     X = np.mean(Sxx, axis=1)
     return X
 
-def print_df(d):
-    print(f"\n********** {d['sound_type'].iloc[0]} ***********\n"); print(d); d.info(); print("\n")
+def print_df(d,name="DATAFRAME"):
+    print(f"\n********** {name} ***********\n"); print(d); d.info(); print("\n")
 
 df = pd.read_pickle("/Users/adrian/Documents/Senior Design/SeniorDesign/Algorithms/data/raw_recordings.pkl")
 df = df[df['sound_type'] == 'WHITE_NOISE']
-print(df)
-df = df.groupby(['az', 'el', 'channel'])['signal'].agg(lambda x: np.concatenate(x.values)).reset_index()
-df['HRTF'] = df.apply(lambda row: compute_spectrum(row['signal'],fs=96000), axis=1)
+df['spectrum'] = df.apply(lambda row: compute_spectrum(row['signal'],fs=96000), axis=1)
+df['sound_type']='HRTF'
+df.drop('signal', axis=1, inplace=True)
 pd.to_pickle(df, "HRTF.pkl")
-print(df)
+print_df(df)
