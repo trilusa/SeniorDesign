@@ -42,33 +42,55 @@ def split_audio(row,T=1):
 def print_df(d,name="DATAFRAME"):
     print(f"\n********** {name} ***********\n"); print(d); d.info(); print("\n")
 
+
+az=100
+sound_type="MUSIC"
 df_hrtf = pd.read_pickle("/Users/adrian/Documents/Senior Design/SeniorDesign/Algorithms/data/HRTF.pkl")
-df_hrtf = df_hrtf[df_hrtf['az'] == 100]
+df_hrtf = df_hrtf.query('az == @az')
 
 df = pd.read_pickle("/Users/adrian/Documents/Senior Design/SeniorDesign/Algorithms/data/raw_recordings.pkl")
-print_df(df)
-az=100
-el=50
-sound_type="MUSIC"
-
-# df = df[df['az'] == az and df['el']==el] #pick out only straight ahead
-# df_hrtf = df_hrtf[(df_hrtf['az'] == az) & (df_hrtf['el'] == el)]
-# df = df[(df['az'] == az) & (df['el'] == el)]
-df_hrtf = df_hrtf.query('az == @az')
-df=df.query('az == @az')#  and  el == @el  and  sound_type == @sound_type')
-print_df(df_hrtf)
-#split into 200ms
+df=df.query('az == @az and sound_type==@sound_type')
 df = pd.concat(df.apply(lambda row: split_audio(row,T=.2), axis=1).tolist(), ignore_index=True)
 df['spectrum'] = df.apply(compute_spectrum, axis=1)
 df.drop('signal', axis=1, inplace=True)
+X_R=df.query('channel=="R"')['spectrum']
+H_L=df_hrtf.query('channel=="L"')['spectrum']
+print(X_R*H_L)
+# for el in df_hrtf['el']:
+    # scores = np.zeros(max(df_el['seq_id'].values)+1)
+        # print(f'el={el},seq_id={i}')
+        
+        
+        # print(X_R)
+        # X_L=df_el.query('seq_id==@i and channel=="L"')['spectrum'].values[0]
+        # HRTF_L = df_hrtf_el.query('channel=="L"')['spectrum'].values[0]
+        # HRTF_R = df_hrtf_el.query('channel=="R"')['spectrum'].values[0]
 
-#compute specturm for each chunck
-i=0
-print(df.query('seq_id==@i and el == @el  and  sound_type == @sound_type'))
+        # A=X_R*HRTF_L
+        # # print(A)
+        # B=X_L*HRTF_R
+        # scores[i] = np.linalg.norm(A-B)
+    # print(scores)
 
-HRTF_L = df_hrtf.query('el=@el and channel==L')
 
-print(HRTF_L)
+
+
+
+
+
+
+#  )
+# print_df(df_hrtf)
+#split into 200ms
+
+
+# #compute specturm for each chunck
+# i=0
+# print(df.query('seq_id==@i and el == @el  and  sound_type == @sound_type'))
+
+# HRTF_L = df_hrtf.query('el=@el and channel==L')
+
+# print(HRTF_L)
     
 
 

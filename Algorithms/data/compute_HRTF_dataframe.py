@@ -21,5 +21,5 @@ df = df[df['sound_type'] == 'WHITE_NOISE']
 df['spectrum'] = df.apply(lambda row: compute_spectrum(row['signal'],fs=96000), axis=1)
 df['sound_type']='HRTF'
 df.drop('signal', axis=1, inplace=True)
-pd.to_pickle(df, "HRTF.pkl")
+pd.to_pickle(df, "HRTF_df.pkl")
 print_df(df)

@@ -22,4 +22,7 @@ for index, row in df.iterrows():
     output_dir = f"wav/{row['sound_type']}"
     ensure_dir(output_dir)
     filename = f"{output_dir}/az{row['az']}_el{row['el']}_{row['sound_type']}_fs{row['sample_rate']}_{row['channel']}.wav"
-    save_wave(filename, row['signal'], row['sample_rate'])
+    if not os.path.exists(filename):
+        save_wave(filename, row['signal'], row['sample_rate'])
+
+print("Done")
