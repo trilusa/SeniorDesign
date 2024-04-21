@@ -6,6 +6,7 @@ from tensorflow.keras.layers import Input, Conv2D, BatchNormalization, ReLU, Fla
 from tensorflow.keras.models import Model
 from sklearn.model_selection import train_test_split
 import time
+
 def compute_spectrogram(data, fs, window_L):
     data=data/(2**15) #normalize
     frequencies, times, Sxx = spectrogram(data, fs=fs, window='hamming', nperseg=window_L, noverlap=window_L//2, nfft=window_L, scaling='density')
@@ -19,8 +20,8 @@ def preprocess_signals(df, window_length,duration):
         left_signal = group[group['channel'] == 'L']['signal'].values[0]
         right_signal = group[group['channel'] == 'R']['signal'].values[0]
         sample_rate = group['sample_rate'].values[0]  # Assuming same sample rate for both
-        left_spectrogram = compute_spectrogram(left_signal, sample_rate, window_length)[:,:duration]
-        right_spectrogram = compute_spectrogram(right_signal, sample_rate, window_length)[:,:duration]
+        left_spectrogram = compute_spectrogram(left_signal, sample_rate, window_length)[:,:duration].astype(np.float32)
+        right_spectrogram = compute_spectrogram(right_signal, sample_rate, window_length)[:,:duration].astype(np.float32)
         stacked_spectrograms = np.stack([left_spectrogram, right_spectrogram], axis=-1)  # Expected shape: (256, 200, 2)
         inputs.append(stacked_spectrograms)
         targets.append([group['az'].values[0], group['el'].values[0]])
@@ -60,13 +61,13 @@ print("\nStarting up\n")
 t_start=time.time(); t_log=[t_start]
 window_length = 256 
 spectrogram_time_len = 200 #metaparamater
-df_file = "/Users/adrian/Documents/Senior Design/SeniorDesign/Algorithms/data/raw_recordings.pkl"
+df_file = "/Users/adrian/Documents/Senior Design/SeniorDesign/Algorithms/data/raw_recordings_no_whitenoise.pkl"
 
 #################### Preprocessing ####################
 print("**************  Preprocessing *****************")
 print(f"  Loading \"{df_file}\"")
 df = pd.read_pickle(df_file)
-df=df.query('sound_type=="WHITE_NOISE"')
+# df=df.query('sound_type=="WHITE_NOISE"')
 t_log.append(time.time()); 
 print(f"Df Loaded: Executed in {t_log[-1]-t_log[-2]} sec\n")
 
@@ -93,7 +94,7 @@ print("Model init done!")
 history = model.fit(
     X_train, y_train,
     validation_data=(X_val, y_val),
-    epochs=50,
+    epochs=20,
     batch_size=32
 )
 t_log.append(time.time()); print(f"Model trained: Executed in {t_log[-1]-t_log[-2]} sec\n")

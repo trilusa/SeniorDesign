@@ -161,3 +161,4 @@ cython_debug/
 *.pkl
 *.wav
 wav/
+/.DS_Store
